@@ -1,0 +1,5 @@
+1 user1 password1 2000 euro
+2 user2 password2 3000.50 lei
+3 user3 password3 100.20 euro
+4 user4 password4 15 euro
+5 user5 password5 1000 lei
