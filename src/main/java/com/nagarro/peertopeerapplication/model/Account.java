@@ -1,28 +1,43 @@
 package com.nagarro.peertopeerapplication.model;
 
-public class Account {
-    private String accountId;
-    private float balance;
-    private String currency;
-    private String ownerId;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
-    public Account(String accountId, float balance, String currency, String ownerId) {
-        this.accountId = accountId;
-        this.balance = balance;
-        this.currency = currency;
-        this.ownerId = ownerId;
-    }
+@Entity
+@Table(name = "accounts")
+public class Account {
+
+    @Id
+    @NotNull
+    @Size(min = 3, max = 50)
+    private String Id;
+
+    @PositiveOrZero
+    private float balance;
+    @NotBlank
+    private String currency;
+
+    @NotNull
+    private Long ownerId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_accout_id")
+    private User user;
+
 
     public Account() {
         this.balance = 0;
     }
 
     public String getAccountId() {
-        return accountId;
+        return Id;
     }
 
     public void setAccountId(String accountId) {
-        this.accountId = accountId;
+        this.Id = accountId;
     }
 
     public float getBalance() {
@@ -41,11 +56,19 @@ public class Account {
         this.currency = currency;
     }
 
-    public String getOwnerId() {
+    public Long getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId) {
+    public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

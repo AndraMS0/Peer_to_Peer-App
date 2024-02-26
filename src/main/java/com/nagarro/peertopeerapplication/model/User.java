@@ -1,19 +1,57 @@
 package com.nagarro.peertopeerapplication.model;
 
-public class User {
-    private String userId;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Random;
+
+@Entity
+@Table(name= "users")
+public class User implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    @Size(min = 3, max = 50)
+    private long Id;
+
+    @ManyToOne
+    @JoinColumn(name = "savings_group_id")
+    private SavingsGroup savingsGroup;
+
+    @NotBlank
+    @Size(min = 3, max = 50)
     private String username;
+
+    @NotBlank
+    @Size(min = 6, message = "Password must be at least 6 characters long.")
     private String password;
 
-    public User(String userId, String username, String password) {
-        this.userId = userId;
+
+    @OneToMany(mappedBy = "user")
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "user")
+    private List<Account> accounts;
+
+    public User( String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public String getUserId() {
-        return userId;
+    public User(){
+        this.username = "DefaultUser";
+        this.password = "DefaultPassword0";
     }
+
+    public void addTransaction(Transaction transaction){
+        this.transactions.add(transaction);
+    }
+
 
     public String getUsername() {
         return username;
@@ -23,9 +61,6 @@ public class User {
         return password;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public void setUsername(String username) {
         this.username = username;

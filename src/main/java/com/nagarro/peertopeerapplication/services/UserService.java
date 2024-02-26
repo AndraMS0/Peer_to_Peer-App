@@ -1,55 +1,70 @@
 package com.nagarro.peertopeerapplication.services;
 
+
+import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.model.User;
+import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
+import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
+import com.nagarro.peertopeerapplication.repositories.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class UserService {
-    private final Map<String, User> users = new HashMap<>();
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
     private final AccountService accountService;
 
-    public UserService(AccountService accountService) {
+    private final GenericUserRepository genericUserRepository;
+
+
+
+    @Autowired
+    public UserService(UserRepository userRepository, AccountService accountService, TransactionRepository transactionRepository, GenericUserRepository genericUserRepository) {
+        this.userRepository = userRepository;
         this.accountService = accountService;
+        this.transactionRepository = transactionRepository;
+        this.genericUserRepository = genericUserRepository;
+
+    }
+    public User getUserByUsername(String username) {
+        return genericUserRepository.findByUsername(username);
     }
 
     public AccountService getAccountService() {
         return accountService;
     }
 
-    public User registerUser(String userId, String username, String password) {
-        if (users.containsKey(userId)) {
-            throw new IllegalArgumentException("User already exists with this ID.");
+    public User registerUser(String username, String password) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("User already exists with this username.");
         }
-        User newUser = new User(userId, username, password);
-        users.put(userId, newUser);
-        return newUser;
+        User newUser = new User(username, password);
+        return userRepository.save(newUser);
     }
 
     public User logIn(String username, String password) {
-        for (User user : users.values()) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            if(user.getPassword().equals(password)){
                 return user;
             }
         }
         throw new IllegalArgumentException("Invalid username or password.");
     }
 
-    public String getUsername(String userId) {
-        User user = users.get(userId);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-        return user.getUsername();
+    public List<Transaction> getTransactionsByUserId(Long userId) {
+        return transactionRepository.findByUserId(userId);
     }
 
-    public void joinGroup(String userId, String groupId) {
-        User user = users.get(userId);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-        //will be added with GroupService
-    }
+
+
 }

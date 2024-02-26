@@ -25,15 +25,18 @@ public class PeerToPeerApplication {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] userInformations = line.split(" ");
-                userService.registerUser(userInformations[0], userInformations[1], userInformations[2]);
-                userService = new UserService(accountService);
-                userService.getAccountService().createAccount(userInformations[0], userInformations[4]);
-                accountService.deposit("0", Float.parseFloat(userInformations[3]));
+                //userService.registerUser(userInformations[0], userInformations[1], userInformations[2]);
+                //userService = new UserService(accountService);
+               // userService.getAccountService().createAccount(userInformations[0], userInformations[4]);
+                //accountService.deposit("0", Float.parseFloat(userInformations[3]));
                 System.out.println(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         context.close();
+       // userService.registerUser("userid1", "userName", "Password1");
+
     }
 }
