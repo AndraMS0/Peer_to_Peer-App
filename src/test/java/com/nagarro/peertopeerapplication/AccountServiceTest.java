@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,18 +91,18 @@ public class AccountServiceTest {
 
     @Test
     public void depositTest(){
-         String accountId = "IDAc11";
-         float amount1 = 300.5f;
-        float amount2 = 10f;
+         Long accountId = 999l;
+         BigInteger amount1 = BigInteger.valueOf(300);
+         BigInteger amount2 = BigInteger.valueOf(10);
          Account account = new Account();
          when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
-         assertEquals(account.getBalance(),  0f);
+         assertEquals(account.getBalance(),  BigInteger.valueOf(0));
          accountService.deposit(accountId, amount1);
-         assertEquals(account.getBalance(),  300.5f);
+         assertEquals(account.getBalance(),  BigInteger.valueOf(300));
 
         accountService.deposit(accountId, amount2);
-        assertEquals(account.getBalance(),  310.5f);
+        assertEquals(account.getBalance(),  BigInteger.valueOf(310));
 
         verify(accountRepository, times(2)).findById(accountId);
     }
@@ -109,38 +110,38 @@ public class AccountServiceTest {
     @Test
     void withdraw_EnoughBalance_AccountUpdatedTest() {
 
-        String accountId = "account1";
+        Long accountId = 8888l;
         Account mockAccount = new Account();
         mockAccount.setAccountId(accountId);
-        mockAccount.setBalance(200.0f);
+        mockAccount.setBalance(BigInteger.valueOf(200));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 
-        accountService.withdraw(accountId, 100.0f);
+        accountService.withdraw(accountId, BigInteger.valueOf(100));
 
-        assertEquals(100.0f, mockAccount.getBalance());
+        assertEquals(BigInteger.valueOf(100), mockAccount.getBalance());
         verify(accountRepository).save(mockAccount);
     }
 
     @Test
     void getBalanceTest() {
-        String accountId = "account3";
+        Long accountId = 888l;
         Account mockAccount = new Account();
         mockAccount.setAccountId(accountId);
-        mockAccount.setBalance(150.0f);
+        mockAccount.setBalance(BigInteger.valueOf(150));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 
-        float balance = accountService.getBalance(accountId);
+        BigInteger balance = accountService.getBalance(accountId);
 
-        assertEquals(150.0f, balance);
+        assertEquals(BigInteger.valueOf(150), balance);
     }
 
     @Test
     void checkAccountStatus_LowBalanceTest() {
 
-        String accountId = "account4";
+        Long accountId = 2222l;
         Account mockAccount = new Account();
         mockAccount.setAccountId(accountId);
-        mockAccount.setBalance(50.0f);
+        mockAccount.setBalance(BigInteger.valueOf(50));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 
         String status = accountService.checkAccountStatus(accountId);

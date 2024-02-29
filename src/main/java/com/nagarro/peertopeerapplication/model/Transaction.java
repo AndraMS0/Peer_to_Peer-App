@@ -10,7 +10,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String transactionId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_transaction_id")
@@ -24,12 +24,12 @@ public class Transaction {
     public void executeTransaction(){
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public Long getTransactionId() {
+        return id;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setTransactionId(Long transactionId) {
+        this.id = transactionId;
     }
 
     public Date getDate() {

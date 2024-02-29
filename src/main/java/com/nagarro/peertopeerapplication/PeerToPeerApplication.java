@@ -3,7 +3,13 @@ package com.nagarro.peertopeerapplication;
 import com.nagarro.peertopeerapplication.config.Config;
 import com.nagarro.peertopeerapplication.services.AccountService;
 import com.nagarro.peertopeerapplication.services.UserService;
+<<<<<<< Updated upstream
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+=======
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+>>>>>>> Stashed changes
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,6 +23,7 @@ public class PeerToPeerApplication {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+<<<<<<< Updated upstream
         UserService userService = context.getBean(UserService.class);
         AccountService accountService = context.getBean(AccountService.class);
         ResourceLoader resourceLoader = context;
@@ -36,6 +43,28 @@ public class PeerToPeerApplication {
         }
 
         context.close();
+=======
+        SpringApplication.run(PeerToPeerApplication.class, args);
+        //UserService userService = context.getBean(UserService.class);
+//        //AccountService accountService = context.getBean(AccountService.class);
+//        ResourceLoader resourceLoader = context;
+//        Resource resource = resourceLoader.getResource("classpath:userData.txt");
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                String[] userInformations = line.split(" ");
+//                //userService.registerUser(userInformations[0], userInformations[1], userInformations[2]);
+//                //userService = new UserService(accountService);
+//               // userService.getAccountService().createAccount(userInformations[0], userInformations[4]);
+//                //accountService.deposit("0", Float.parseFloat(userInformations[3]));
+//                System.out.println(line);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        context.close();
+>>>>>>> Stashed changes
        // userService.registerUser("userid1", "userName", "Password1");
 
     }

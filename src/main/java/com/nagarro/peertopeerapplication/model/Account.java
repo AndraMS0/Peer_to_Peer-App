@@ -6,17 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigInteger;
+
 @Entity
 @Table(name = "accounts")
 public class Account {
 
     @Id
-    @NotNull
-    @Size(min = 3, max = 50)
-    private String Id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @PositiveOrZero
-    private float balance;
+    private BigInteger balance;
     @NotBlank
     private String currency;
 
@@ -29,22 +30,22 @@ public class Account {
 
 
     public Account() {
-        this.balance = 0;
+        this.balance = BigInteger.valueOf(0);
     }
 
-    public String getAccountId() {
-        return Id;
+    public Long getAccountId() {
+        return id;
     }
 
-    public void setAccountId(String accountId) {
-        this.Id = accountId;
+    public void setAccountId(Long accountId) {
+        this.id = accountId;
     }
 
-    public float getBalance() {
+    public BigInteger getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(BigInteger balance) {
         this.balance = balance;
     }
 

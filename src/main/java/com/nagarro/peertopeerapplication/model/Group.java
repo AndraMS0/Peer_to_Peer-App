@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class Group {
 
     @Id
-    protected String id;
+    protected Long id;
     @OneToMany(mappedBy = "savingsGroup")
     protected List<User> members;
 

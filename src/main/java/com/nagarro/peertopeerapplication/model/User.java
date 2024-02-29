@@ -15,9 +15,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    @Size(min = 3, max = 50)
-    private long Id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "savings_group_id")

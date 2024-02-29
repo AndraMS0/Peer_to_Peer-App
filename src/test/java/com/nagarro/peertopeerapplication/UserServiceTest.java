@@ -90,13 +90,13 @@ public class UserServiceTest {
         mockTransactions.add(transaction1);
         mockTransactions.add(transaction2);
 
-        when(transactionRepository.findByUserId(userId)).thenReturn(mockTransactions);
+        when(transactionRepository.findByUser_Id(userId)).thenReturn(mockTransactions);
 
         List<Transaction> transactions = userService.getTransactionsByUserId(userId);
 
         assertNotNull(transactions, "Transactions should not be null");
         assertEquals(2, transactions.size());
-        verify(transactionRepository, times(1)).findByUserId(userId);
+        verify(transactionRepository, times(1)).findByUser_Id(userId);
     }
 
     @Test

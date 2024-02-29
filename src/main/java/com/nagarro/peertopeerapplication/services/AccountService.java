@@ -10,7 +10,11 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 
+<<<<<<< Updated upstream
 import java.util.HashMap;
+=======
+import java.math.BigInteger;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 
@@ -44,31 +48,31 @@ public class AccountService {
         return this.accountRepository.findByCurrency(currency);
     }
 
-    public void deposit(String accountId, float amount){
+    public void deposit(Long accountId, BigInteger amount){
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
-        account.setBalance(account.getBalance() + amount);
+        account.setBalance(account.getBalance().add(amount));
         accountRepository.save(account);
     }
 
-    public void withdraw(String accountId, float amount){
+    public void withdraw(Long accountId, BigInteger amount){
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
-        if(account.getBalance() - amount >= 0){
-            account.setBalance(account.getBalance() - amount);
+        if(account.getBalance().subtract(amount).compareTo(BigInteger.ZERO) >= 0){
+            account.setBalance(account.getBalance().subtract(amount));
             accountRepository.save(account);
         }
     }
 
-    public float getBalance(String accountId){
+    public BigInteger getBalance(Long accountId){
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found."));
         return account.getBalance();
     }
 
-    public String checkAccountStatus(String accountId){
+    public String checkAccountStatus(Long accountId){
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found."));
-        float balance = account.getBalance();
-        return balance < 100.0 ? "Low Balance" : "Balance is sufficient";
+        BigInteger balance = account.getBalance();
+        return balance.compareTo(BigInteger.valueOf(100)) <0 ? "Low Balance" : "Balance is sufficient";
     }
 
 }

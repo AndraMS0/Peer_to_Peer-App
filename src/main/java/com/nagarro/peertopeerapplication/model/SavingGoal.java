@@ -14,6 +14,10 @@ public class SavingGoal {
     private String purpose;
     private float targetAmount;
 
+    @ManyToOne
+    @JoinColumn(name = "saving_goal_on_group_id")
+    private SavingsGroup savingsGroup;
+
     @Temporal(TemporalType.DATE)
     private Date deadline;
 
