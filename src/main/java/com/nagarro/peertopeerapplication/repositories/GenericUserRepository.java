@@ -1,10 +1,10 @@
 package com.nagarro.peertopeerapplication.repositories;
 
 import com.nagarro.peertopeerapplication.model.User;
-<<<<<<< Updated upstream
-import jakarta.persistence.EntityManager;
-=======
->>>>>>> Stashed changes
+//<<<<<<< Updated upstream
+//import jakarta.persistence.EntityManager;
+//=======
+//>>>>>>> Stashed changes
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,15 +1,17 @@
 package com.nagarro.peertopeerapplication.services;
 
 
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
+import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.model.User;
+import com.nagarro.peertopeerapplication.repositories.AccountRepository;
 import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-=======
+//=======
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
@@ -17,7 +19,7 @@ import com.nagarro.peertopeerapplication.repositories.UserRepository;
 import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
