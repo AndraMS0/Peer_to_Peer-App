@@ -25,36 +25,36 @@ public class AccountServiceTest {
     @Mock
     private UserRepository userRepository;
 
-     @Mock
+    @Mock
     private AccountRepository accountRepository;
 
-     @InjectMocks
+    @InjectMocks
     private AccountService accountService;
 
-     @BeforeEach
-    public void setUp(){
-         MockitoAnnotations.openMocks(this);
-     }
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-     @Test
-     public void createAccountTest(){
-      Long userId = 1L;
-      String currency = "RON";
+    @Test
+    public void createAccountTest() {
+        Long userId = 1L;
+        String currency = "RON";
 
-      when(userRepository.findById(userId)).thenReturn(Optional.of(new User("username1", "Password11")));
-      when(accountRepository.save(any(Account.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User("username1", "Password11")));
+        when(accountRepository.save(any(Account.class))).thenAnswer(i -> i.getArguments()[0]);
 
-      Account account = this.accountService.createAccount(userId, currency);
+        Account account = this.accountService.createAccount(userId, currency);
 
-      assertEquals(account.getUser().getUsername(), "username1" );
-      assertEquals(account.getUser().getPassword(), "Password11");
-      assertEquals(account.getOwnerId(), userId);
-      verify(userRepository, times(1)).findById(userId);
-      verify(accountRepository, times(1)).save(any(Account.class));
-     }
+        assertEquals(account.getUser().getUsername(), "username1");
+        assertEquals(account.getUser().getPassword(), "Password11");
+        assertEquals(account.getOwnerId(), userId);
+        verify(userRepository, times(1)).findById(userId);
+        verify(accountRepository, times(1)).save(any(Account.class));
+    }
 
-     @Test
-     public void getAccountsByOwnerIdTest(){
+    @Test
+    public void getAccountsByOwnerIdTest() {
         Long userId = 2L;
         Account account1 = new Account();
         Account account2 = new Account();
@@ -68,10 +68,10 @@ public class AccountServiceTest {
 
         assertEquals(accounts.size(), 2);
         verify(accountRepository, times(1)).findByOwnerId(userId);
-     }
+    }
 
     @Test
-    public void getAccountsByCurrencyTest(){
+    public void getAccountsByCurrencyTest() {
         String currency = "EUR";
         Account account1 = new Account();
         Account account2 = new Account();
@@ -90,19 +90,19 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void depositTest(){
-         Long accountId = 999l;
-         BigInteger amount1 = BigInteger.valueOf(300);
-         BigInteger amount2 = BigInteger.valueOf(10);
-         Account account = new Account();
-         when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+    public void depositTest() {
+        Long accountId = 999l;
+        BigInteger amount1 = BigInteger.valueOf(300);
+        BigInteger amount2 = BigInteger.valueOf(10);
+        Account account = new Account();
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
-         assertEquals(account.getBalance(),  BigInteger.valueOf(0));
-         accountService.deposit(accountId, amount1);
-         assertEquals(account.getBalance(),  BigInteger.valueOf(300));
+        assertEquals(account.getBalance(), BigInteger.valueOf(0));
+        accountService.deposit(accountId, amount1);
+        assertEquals(account.getBalance(), BigInteger.valueOf(300));
 
         accountService.deposit(accountId, amount2);
-        assertEquals(account.getBalance(),  BigInteger.valueOf(310));
+        assertEquals(account.getBalance(), BigInteger.valueOf(310));
 
         verify(accountRepository, times(2)).findById(accountId);
     }

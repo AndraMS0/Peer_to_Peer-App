@@ -2,7 +2,7 @@ package com.nagarro.peertopeerapplication.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "saving_goals")
@@ -18,8 +18,7 @@ public class SavingGoal {
     @JoinColumn(name = "saving_goal_on_group_id")
     private SavingsGroup savingsGroup;
 
-    @Temporal(TemporalType.DATE)
-    private Date deadline;
+    private LocalDate deadline;
 
     public void addFunds(float amount) {
     }
@@ -40,7 +39,15 @@ public class SavingGoal {
         return targetAmount;
     }
 
-    public Date getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
+    }
+
+    public void setSavingsGroup(SavingsGroup savingsGroup) {
+        this.savingsGroup = savingsGroup;
+    }
+
+    public SavingsGroup getSavingsGroup() {
+        return this.savingsGroup;
     }
 }

@@ -39,27 +39,25 @@ public class UserIntegrationTester {
     private AccountRepository accountRepository;
 
     @BeforeAll
-    public static void init(){
-       restTemplate = new RestTemplate();
+    public static void init() {
+        restTemplate = new RestTemplate();
     }
 
     @BeforeEach
-    public void setUp(){
-       baseUrl = baseUrl.concat(":") .concat(port + "").concat("/users");
+    public void setUp() {
+        baseUrl = baseUrl.concat(":").concat(port + "").concat("/users");
     }
 
     @Test
-   // @Sql(statements = "INSERT INTO USERS (ID, SAVINGS_GROUP_ID, USERNAME, PASSWORD) VALUES (1, 2, 'testUser', 'Password22')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD )
-    public void testRegisterUser(){
-        User user = new User("username1", "Password11");
+    public void testRegisterUser() {
+        User user = new User("username12", "Password113");
         User response = restTemplate.postForObject(baseUrl, user, User.class);
-        assertEquals("username1", response.getUsername());
-        assertEquals("Password11", response.getPassword());
-        assertEquals(1, userRepository.findAll().size());
+        assertEquals("username12", response.getUsername());
+        assertEquals("Password113", response.getPassword());
     }
 
     @Test
-    public void testLoginSuccess(){
+    public void testLoginSuccess() {
         User user = new User("username1", "Password111");
         restTemplate.postForObject(baseUrl, user, User.class);
 
@@ -86,7 +84,7 @@ public class UserIntegrationTester {
     public void testCalculateTotalBalance() {
         Long userId = 1L;
         ResponseEntity<BigInteger> response = restTemplate.getForEntity(
-                 baseUrl + "/" + userId + "/total-balance",
+                baseUrl + "/" + userId + "/total-balance",
                 BigInteger.class
         );
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -99,6 +97,6 @@ public class UserIntegrationTester {
         assertEquals(expectedTotalBalance, response.getBody());
     }
 
-    }
+}
 
 

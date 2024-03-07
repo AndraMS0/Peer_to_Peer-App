@@ -37,12 +37,12 @@ public class UserServiceTest {
     private UserService userService;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testRegisterUser_Success(){
+    public void testRegisterUser_Success() {
         String username = "newUser";
         String password = "Password11";
 
@@ -58,18 +58,18 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegisterUser_Fail(){
+    public void testRegisterUser_Fail() {
         String username = "existingUser";
 
         when(userRepository.existsByUsername(username)).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class , () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             userService.registerUser(username, "Password22");
         });
     }
 
     @Test
-    public void testLogIn_InvalidCredentials(){
+    public void testLogIn_InvalidCredentials() {
         String username = "user222";
         String wrongPassword = "wrongPassword11";
 
@@ -82,7 +82,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetTransactionsByUserid(){
+    public void testGetTransactionsByUserid() {
         Long userId = 1L;
         List<Transaction> mockTransactions = new ArrayList<>();
         Transaction transaction1 = new Transaction();
@@ -112,7 +112,6 @@ public class UserServiceTest {
         assertEquals(username, result.getUsername());
         verify(genericUserRepository).findByUsername(username);
     }
-
 
 
 }

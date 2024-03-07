@@ -2,6 +2,7 @@ package com.nagarro.peertopeerapplication.services;
 
 
 //<<<<<<< Updated upstream
+
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.model.User;
@@ -40,7 +41,6 @@ public class UserService {
     private final GenericUserRepository genericUserRepository;
 
 
-
     @Autowired
     public UserService(UserRepository userRepository, AccountService accountService, TransactionRepository transactionRepository, GenericUserRepository genericUserRepository, AccountRepository accountRepository) {
         this.userRepository = userRepository;
@@ -50,13 +50,11 @@ public class UserService {
         this.accountRepository = accountRepository;
 
     }
+
     public User getUserByUsername(String username) {
         return genericUserRepository.findByUsername(username);
     }
 
-    public AccountService getAccountService() {
-        return accountService;
-    }
 
     public User registerUser(String username, String password) {
         if (userRepository.existsByUsername(username)) {
@@ -68,9 +66,9 @@ public class UserService {
 
     public User logIn(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if(user.getPassword().equals(password)){
+            if (user.getPassword().equals(password)) {
                 return user;
             }
         }

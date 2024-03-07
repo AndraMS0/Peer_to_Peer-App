@@ -12,9 +12,14 @@ import java.util.List;
 public class SavingsGroup extends Group {
 
     @OneToMany(mappedBy = "savingsGroup")
-    private List<SavingGoal> savingGoals;
+    private List<SavingGoal> savingGoals = new ArrayList<>();
 
     public SavingsGroup() {
         super();
     }
+
+    public List<SavingGoal> getSavingGoals() {
+        return savingGoals;
+    }
+
 }

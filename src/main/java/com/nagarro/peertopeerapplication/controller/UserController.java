@@ -17,13 +17,13 @@ public class UserController {
     private UserService service;
 
     @PostMapping()
-    public User registerUser(@RequestBody User user){
+    public User registerUser(@RequestBody User user) {
         user = service.registerUser(user.getUsername(), user.getPassword());
-        return  user;
+        return user;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> logIn(@RequestBody User user){
+    public ResponseEntity<User> logIn(@RequestBody User user) {
         User loggedInUser = service.logIn(user.getUsername(), user.getPassword());
         return ResponseEntity.ok(loggedInUser);
     }
@@ -33,9 +33,6 @@ public class UserController {
         BigInteger totalBalance = service.calculateTotalBalance(userId);
         return new ResponseEntity<>(totalBalance, HttpStatus.OK);
     }
-
-
-
 
 
 }

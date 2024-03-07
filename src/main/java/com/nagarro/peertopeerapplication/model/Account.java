@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+
 
 import java.math.BigInteger;
 
@@ -25,7 +25,7 @@ public class Account {
     private Long ownerId;
 
     @ManyToOne
-    @JoinColumn(name = "user_accout_id")
+    @JoinColumn(name = "user_account_id")
     private User user;
 
 

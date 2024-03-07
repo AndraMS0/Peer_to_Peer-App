@@ -44,6 +44,7 @@ public abstract class AbstractJpaDAO<T extends Serializable> {
         final T entity = findOne(entityId);
         delete(entity);
     }
+
     protected EntityManager getEntityManager() {
         return this.entityManager;
     }

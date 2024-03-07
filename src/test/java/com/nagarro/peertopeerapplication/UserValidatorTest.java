@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserValidatorTest {
@@ -15,14 +16,14 @@ public class UserValidatorTest {
     private Errors errors;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         validator = new UserValidator();
         user = new User();
         errors = new BeanPropertyBindingResult(user, "user");
     }
 
     @Test
-    public void shouldRejectEmptyUsername(){
+    public void shouldRejectEmptyUsername() {
         user.setUsername("");
         user.setPassword("Password1");
 
@@ -64,7 +65,6 @@ public class UserValidatorTest {
         assertTrue(errors.hasFieldErrors("password"));
         assertTrue(errors.getFieldError("password").getCode().contains("user.password.pattern"));
     }
-
 
 
 }

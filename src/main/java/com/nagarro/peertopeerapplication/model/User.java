@@ -10,25 +10,21 @@ import java.util.List;
 import java.util.Random;
 
 @Entity
-@Table(name= "users")
+@Table(name = "users")
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "savings_group_id")
     private SavingsGroup savingsGroup;
-
     @NotBlank
     @Size(min = 3, max = 50)
     private String username;
-
     @NotBlank
     @Size(min = 6, message = "Password must be at least 6 characters long.")
     private String password;
-
 
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions;
@@ -36,20 +32,19 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Account> accounts;
 
-    public User( String username, String password) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public User(){
+    public User() {
         this.username = "DefaultUser";
         this.password = "DefaultPassword0";
     }
 
-    public void addTransaction(Transaction transaction){
+    public void addTransaction(Transaction transaction) {
         this.transactions.add(transaction);
     }
-
 
     public String getUsername() {
         return username;
@@ -58,7 +53,6 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
-
 
     public void setUsername(String username) {
         this.username = username;

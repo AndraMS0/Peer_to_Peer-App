@@ -1,16 +1,12 @@
 package com.nagarro.peertopeerapplication.repositories;
 
 import com.nagarro.peertopeerapplication.model.User;
-//<<<<<<< Updated upstream
-//import jakarta.persistence.EntityManager;
-//=======
-//>>>>>>> Stashed changes
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GenericUserRepository extends AbstractJpaDAO<User>{
+public class GenericUserRepository extends AbstractJpaDAO<User> {
 
-    public GenericUserRepository(){
+    public GenericUserRepository() {
         this.setClazz(User.class);
     }
 

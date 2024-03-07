@@ -2,7 +2,7 @@ package com.nagarro.peertopeerapplication.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
@@ -16,12 +16,11 @@ public class Transaction {
     @JoinColumn(name = "user_transaction_id")
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private LocalDate date;
     private float amount;
     private float exchangeRate;
 
-    public void executeTransaction(){
+    public void executeTransaction() {
     }
 
     public Long getTransactionId() {
@@ -32,11 +31,11 @@ public class Transaction {
         this.id = transactionId;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
