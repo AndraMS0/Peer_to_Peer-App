@@ -3,74 +3,62 @@ package com.nagarro.peertopeerapplication.services;
 
 //<<<<<<< Updated upstream
 
+import com.nagarro.peertopeerapplication.dto.UserDTO;
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
-import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 //=======
-import com.nagarro.peertopeerapplication.model.Account;
-import com.nagarro.peertopeerapplication.model.User;
-import com.nagarro.peertopeerapplication.repositories.AccountRepository;
-import com.nagarro.peertopeerapplication.repositories.UserRepository;
-import com.nagarro.peertopeerapplication.model.Transaction;
-import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
-import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 //>>>>>>> Stashed changes
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
-
     private final AccountRepository accountRepository;
-    private final AccountService accountService;
-
-    private final GenericUserRepository genericUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, AccountService accountService, TransactionRepository transactionRepository, GenericUserRepository genericUserRepository, AccountRepository accountRepository) {
+    public UserService(UserRepository userRepository, TransactionRepository transactionRepository, AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.accountService = accountService;
         this.transactionRepository = transactionRepository;
-        this.genericUserRepository = genericUserRepository;
         this.accountRepository = accountRepository;
-
-    }
-
-    public User getUserByUsername(String username) {
-        return genericUserRepository.findByUsername(username);
+        this.passwordEncoder = passwordEncoder;
     }
 
 
-    public User registerUser(String username, String password) {
+    private UserDTO convertToDTO(User user) {
+        return new UserDTO(user.getId(), user.getUsername(), user.getPassword());
+    }
+
+
+    public UserDTO registerUser(String username, String plainTextPassword) {
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("User already exists with this username.");
         }
-        User newUser = new User(username, password);
-        return userRepository.save(newUser);
+        String hashedPassword = passwordEncoder.encode(plainTextPassword);
+        User newUser = new User(username, hashedPassword);
+        newUser = userRepository.save(newUser);
+        return convertToDTO(newUser);
     }
 
-    public User logIn(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getPassword().equals(password)) {
-                return user;
-            }
+    public UserDTO logIn(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        String encodedPassword = passwordEncoder.encode(password);
+        if (user != null && passwordEncoder.matches(encodedPassword, user.getPassword())) {
+            return convertToDTO(user);
         }
         throw new IllegalArgumentException("Invalid username or password.");
     }

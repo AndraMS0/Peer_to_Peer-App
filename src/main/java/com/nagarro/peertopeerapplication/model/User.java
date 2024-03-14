@@ -2,12 +2,11 @@ package com.nagarro.peertopeerapplication.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Random;
+
 
 @Entity
 @Table(name = "users")
@@ -40,6 +39,10 @@ public class User implements Serializable {
     public User() {
         this.username = "DefaultUser";
         this.password = "DefaultPassword0";
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void addTransaction(Transaction transaction) {

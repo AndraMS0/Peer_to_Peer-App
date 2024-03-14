@@ -1,8 +1,8 @@
 package com.nagarro.peertopeerapplication;
 
+import com.nagarro.peertopeerapplication.dto.UserDTO;
 import com.nagarro.peertopeerapplication.model.Transaction;
 import com.nagarro.peertopeerapplication.model.User;
-import com.nagarro.peertopeerapplication.repositories.GenericUserRepository;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
 import com.nagarro.peertopeerapplication.services.UserService;
@@ -11,12 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,13 +26,12 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private GenericUserRepository genericUserRepository;
-
-    @Mock
     private TransactionRepository transactionRepository;
 
     @InjectMocks
     private UserService userService;
+
+    private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
     @BeforeEach
     public void setUp() {
@@ -44,17 +41,19 @@ public class UserServiceTest {
     @Test
     public void testRegisterUser_Success() {
         String username = "newUser";
-        String password = "Password11";
+        String plainTextPassword = "Password11";
+        String hashedPassword = "hashedPassword";
 
         when(userRepository.existsByUsername(username)).thenReturn(false);
+        when(passwordEncoder.encode(plainTextPassword)).thenReturn(hashedPassword);
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        User result = userService.registerUser(username, password);
+        UserDTO result = userService.registerUser(username, plainTextPassword);
+
         assertNotNull(result);
         assertEquals(username, result.getUsername());
         verify(userRepository, times(1)).existsByUsername(username);
-        verify(userRepository, times(1)).save(any(User.class));
-
+        verify(passwordEncoder, times(1)).encode(plainTextPassword);
     }
 
     @Test
@@ -63,9 +62,7 @@ public class UserServiceTest {
 
         when(userRepository.existsByUsername(username)).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            userService.registerUser(username, "Password22");
-        });
+        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(username, "Password22"));
     }
 
     @Test
@@ -73,12 +70,26 @@ public class UserServiceTest {
         String username = "user222";
         String wrongPassword = "wrongPassword11";
 
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User(username, "password1P")));
+        when(userRepository.findByUsername(username)).thenReturn((new User(username, "password1P")));
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            userService.logIn(username, wrongPassword);
-        });
+        assertThrows(IllegalArgumentException.class, () -> userService.logIn(username, wrongPassword));
+    }
 
+    @Test
+    public void testLogIn_Success() {
+        String username = "LogInUser";
+        String password = "testPassword1";
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword("encodedTestPassword");
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(passwordEncoder.encode(password)).thenReturn("encodedTestPassword");
+        when(passwordEncoder.matches("encodedTestPassword", "encodedTestPassword")).thenReturn(true);
+
+        UserDTO userDTO = userService.logIn(username, password);
+        assertEquals(username, userDTO.getUsername());
+        assertEquals("encodedTestPassword", userDTO.getPassword());
     }
 
     @Test
@@ -98,20 +109,5 @@ public class UserServiceTest {
         assertEquals(2, transactions.size());
         verify(transactionRepository, times(1)).findByUser_Id(userId);
     }
-
-    @Test
-    public void testGetUserByUsernameGenericRepositoryTest() {
-
-        String username = "testUser";
-        User mockUser = new User();
-        mockUser.setUsername(username);
-        when(genericUserRepository.findByUsername(username)).thenReturn(mockUser);
-
-        User result = userService.getUserByUsername(username);
-
-        assertEquals(username, result.getUsername());
-        verify(genericUserRepository).findByUsername(username);
-    }
-
 
 }

@@ -1,5 +1,6 @@
 package com.nagarro.peertopeerapplication;
 
+import com.nagarro.peertopeerapplication.dto.AccountDTO;
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -39,18 +41,21 @@ public class AccountServiceTest {
     @Test
     public void createAccountTest() {
         Long userId = 1L;
-        String currency = "RON";
+        String currency = "USD";
+        User user = new User();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User("username1", "Password11")));
-        when(accountRepository.save(any(Account.class))).thenAnswer(i -> i.getArguments()[0]);
+        Account account = new Account();
+        account.setCurrency(currency);
+        account.setOwnerId(userId);
 
-        Account account = this.accountService.createAccount(userId, currency);
+        when(accountRepository.save(any(Account.class))).thenReturn(account);
 
-        assertEquals(account.getUser().getUsername(), "username1");
-        assertEquals(account.getUser().getPassword(), "Password11");
-        assertEquals(account.getOwnerId(), userId);
-        verify(userRepository, times(1)).findById(userId);
-        verify(accountRepository, times(1)).save(any(Account.class));
+        AccountDTO result = accountService.createAccount(userId, currency);
+
+        assertNotNull(result);
+        assertEquals(currency, result.getCurrency());
+        assertEquals(userId, result.getOwnerId());
     }
 
     @Test
@@ -64,7 +69,7 @@ public class AccountServiceTest {
 
         when(accountRepository.findByOwnerId(userId)).thenReturn(mockAccounts);
 
-        List<Account> accounts = accountService.getAccountsByOwnerId(userId);
+        List<AccountDTO> accounts = accountService.getAccountsByOwnerId(userId);
 
         assertEquals(accounts.size(), 2);
         verify(accountRepository, times(1)).findByOwnerId(userId);
@@ -83,7 +88,7 @@ public class AccountServiceTest {
 
         when(accountRepository.findByCurrency(currency)).thenReturn(mockAccounts);
 
-        List<Account> accounts = accountService.getAccountsByCurrency(currency);
+        List<AccountDTO> accounts = accountService.getAccountsByCurrency(currency);
 
         assertEquals(accounts.size(), 3);
         verify(accountRepository, times(1)).findByCurrency(currency);
@@ -91,7 +96,7 @@ public class AccountServiceTest {
 
     @Test
     public void depositTest() {
-        Long accountId = 999l;
+        Long accountId = 999L;
         BigInteger amount1 = BigInteger.valueOf(300);
         BigInteger amount2 = BigInteger.valueOf(10);
         Account account = new Account();
@@ -109,10 +114,9 @@ public class AccountServiceTest {
 
     @Test
     void withdraw_EnoughBalance_AccountUpdatedTest() {
-
-        Long accountId = 8888l;
+        Long accountId = 8888L;
         Account mockAccount = new Account();
-        mockAccount.setAccountId(accountId);
+        mockAccount.setId(accountId);
         mockAccount.setBalance(BigInteger.valueOf(200));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 
@@ -124,9 +128,9 @@ public class AccountServiceTest {
 
     @Test
     void getBalanceTest() {
-        Long accountId = 888l;
+        Long accountId = 888L;
         Account mockAccount = new Account();
-        mockAccount.setAccountId(accountId);
+        mockAccount.setId(accountId);
         mockAccount.setBalance(BigInteger.valueOf(150));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 
@@ -137,10 +141,9 @@ public class AccountServiceTest {
 
     @Test
     void checkAccountStatus_LowBalanceTest() {
-
-        Long accountId = 2222l;
+        Long accountId = 2222L;
         Account mockAccount = new Account();
-        mockAccount.setAccountId(accountId);
+        mockAccount.setId(accountId);
         mockAccount.setBalance(BigInteger.valueOf(50));
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(mockAccount));
 

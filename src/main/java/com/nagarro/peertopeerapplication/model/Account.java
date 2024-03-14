@@ -18,6 +18,7 @@ public class Account {
 
     @PositiveOrZero
     private BigInteger balance;
+
     @NotBlank
     private String currency;
 
@@ -33,11 +34,11 @@ public class Account {
         this.balance = BigInteger.valueOf(0);
     }
 
-    public Long getAccountId() {
+    public Long getId() {
         return id;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setId(Long accountId) {
         this.id = accountId;
     }
 

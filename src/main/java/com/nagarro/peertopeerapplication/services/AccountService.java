@@ -1,23 +1,16 @@
 package com.nagarro.peertopeerapplication.services;
 
+import com.nagarro.peertopeerapplication.dto.AccountDTO;
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 
-//<<<<<<< Updated upstream
-//import java.util.HashMap;
-//=======
-//import java.math.BigInteger;
-//>>>>>>> Stashed changes
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -31,22 +24,32 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public synchronized Account createAccount(Long userId, String currency) {
+    public synchronized AccountDTO createAccount(Long userId, String currency) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
         Account account = new Account();
         account.setCurrency(currency);
         account.setOwnerId(userId);
         account.setUser(user);
         accountRepository.save(account);
-        return account;
+        return convertToDTO(account);
     }
 
-    public List<Account> getAccountsByOwnerId(Long ownerId) {
-        return this.accountRepository.findByOwnerId(ownerId);
+    private AccountDTO convertToDTO(Account account) {
+        return new AccountDTO(account.getId(), account.getBalance(), account.getCurrency(), account.getOwnerId());
     }
 
-    public List<Account> getAccountsByCurrency(String currency) {
-        return this.accountRepository.findByCurrency(currency);
+    public List<AccountDTO> getAccountsByOwnerId(Long ownerId) {
+        List<Account> accounts = accountRepository.findByOwnerId(ownerId);
+        return accounts.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountDTO> getAccountsByCurrency(String currency) {
+        List<Account> accounts = accountRepository.findByCurrency(currency);
+        return accounts.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public void deposit(Long accountId, BigInteger amount) {
