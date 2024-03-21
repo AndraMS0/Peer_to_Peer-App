@@ -1,8 +1,5 @@
 package com.nagarro.peertopeerapplication.services;
 
-
-//<<<<<<< Updated upstream
-
 import com.nagarro.peertopeerapplication.dto.UserDTO;
 import com.nagarro.peertopeerapplication.model.Account;
 import com.nagarro.peertopeerapplication.model.Transaction;
@@ -10,9 +7,7 @@ import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
-//=======
-//>>>>>>> Stashed changes
-import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,8 +51,7 @@ public class UserService {
 
     public UserDTO logIn(String username, String password) {
         User user = userRepository.findByUsername(username);
-        String encodedPassword = passwordEncoder.encode(password);
-        if (user != null && passwordEncoder.matches(encodedPassword, user.getPassword())) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return convertToDTO(user);
         }
         throw new IllegalArgumentException("Invalid username or password.");

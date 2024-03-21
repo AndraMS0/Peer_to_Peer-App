@@ -1,4 +1,4 @@
-package com.nagarro.peertopeerapplication.custom;
+package com.nagarro.peertopeerapplication.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

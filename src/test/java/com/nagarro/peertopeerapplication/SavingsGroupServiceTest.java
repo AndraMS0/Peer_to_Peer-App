@@ -5,11 +5,11 @@ import com.nagarro.peertopeerapplication.model.SavingsGroup;
 import com.nagarro.peertopeerapplication.repositories.SavingGoalRepository;
 import com.nagarro.peertopeerapplication.repositories.SavingsGroupRepository;
 import com.nagarro.peertopeerapplication.services.SavingsGroupService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class SavingsGroupServiceTest {
 
     @Mock
@@ -29,10 +30,6 @@ public class SavingsGroupServiceTest {
     @InjectMocks
     private SavingsGroupService savingsGroupService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void createSavingsGroupTest() {
@@ -68,9 +65,7 @@ public class SavingsGroupServiceTest {
         SavingGoal mockGoal = new SavingGoal();
         when(savingsGroupRepository.findById(groupId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            savingsGroupService.addSavingGoalToGroup(groupId, mockGoal);
-        });
+        Exception exception = assertThrows(RuntimeException.class, () -> savingsGroupService.addSavingGoalToGroup(groupId, mockGoal));
         String expectedMessage = "SavingsGroup not found for id " + groupId;
         String actualMessage = exception.getMessage();
 

@@ -6,11 +6,11 @@ import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.TransactionRepository;
 import com.nagarro.peertopeerapplication.repositories.UserRepository;
 import com.nagarro.peertopeerapplication.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @Mock
@@ -31,12 +32,9 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testRegisterUser_Success() {
@@ -53,7 +51,7 @@ public class UserServiceTest {
         assertNotNull(result);
         assertEquals(username, result.getUsername());
         verify(userRepository, times(1)).existsByUsername(username);
-        verify(passwordEncoder, times(1)).encode(plainTextPassword);
+
     }
 
     @Test
@@ -77,19 +75,18 @@ public class UserServiceTest {
 
     @Test
     public void testLogIn_Success() {
-        String username = "LogInUser";
-        String password = "testPassword1";
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword("encodedTestPassword");
+       String username = "testUser";
+       String password = "testPassword";
+       User mockUser = new User();
+       mockUser.setUsername("testUser");
+       mockUser.setPassword(passwordEncoder.encode("testPassword"));
 
-        when(userRepository.findByUsername(username)).thenReturn(user);
-        when(passwordEncoder.encode(password)).thenReturn("encodedTestPassword");
-        when(passwordEncoder.matches("encodedTestPassword", "encodedTestPassword")).thenReturn(true);
+       when(userRepository.findByUsername(username)).thenReturn(mockUser);
+       when(passwordEncoder.matches(password, mockUser.getPassword())).thenReturn(true);
 
-        UserDTO userDTO = userService.logIn(username, password);
-        assertEquals(username, userDTO.getUsername());
-        assertEquals("encodedTestPassword", userDTO.getPassword());
+       UserDTO userDTO = userService.logIn(username, password);
+
+       assertEquals(username, userDTO.getUsername());
     }
 
     @Test

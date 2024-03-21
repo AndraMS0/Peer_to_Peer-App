@@ -16,6 +16,9 @@ public class AccountDTO {
         this.ownerId = ownerId;
     }
 
+    public AccountDTO() {
+    }
+
     public Long getId() {
         return id;
     }

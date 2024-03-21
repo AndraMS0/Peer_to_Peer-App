@@ -28,8 +28,8 @@ public class SavingsGroupService {
 
     public SavingGoal addSavingGoalToGroup(Long groupId, SavingGoal goal) {
         Optional<SavingsGroup> savingsGroupOptional = savingsGroupRepository.findById(groupId);
-        if (!savingsGroupOptional.isPresent()) {
-            throw new RuntimeException("SavingsGroup not found for id " + groupId); // Consider a more specific exception
+        if (savingsGroupOptional.isEmpty()) {
+            throw new RuntimeException("SavingsGroup not found for id " + groupId);
         }
         SavingsGroup savingsGroup = savingsGroupOptional.get();
         goal.setSavingsGroup(savingsGroup);

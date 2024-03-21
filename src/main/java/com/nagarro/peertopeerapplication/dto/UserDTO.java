@@ -12,9 +12,12 @@ public class UserDTO {
         this.password = password;
     }
 
-    public UserDTO(String username, String password){
+    public UserDTO(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public UserDTO() {
     }
 
     public Long getId() {
