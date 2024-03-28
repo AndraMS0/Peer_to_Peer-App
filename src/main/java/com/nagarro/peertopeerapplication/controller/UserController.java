@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -42,6 +44,7 @@ public class UserController {
     }
 
 
+
     @Operation(summary = "Register User", description = "Registers a new user with the provided username and password.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User registered successfully",
@@ -56,6 +59,7 @@ public class UserController {
 
         return userService.registerUser(username, password);
     }
+
 
     @Operation(summary = "Log in user", description = "Authenticate user with username and password")
     @ApiResponses(value = {
