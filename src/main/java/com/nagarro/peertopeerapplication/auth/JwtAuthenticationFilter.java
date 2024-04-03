@@ -1,4 +1,4 @@
-package com.nagarro.peertopeerapplication.configuration;
+package com.nagarro.peertopeerapplication.auth;
 
 import com.nagarro.peertopeerapplication.auth.JWTService;
 import com.nagarro.peertopeerapplication.repositories.TokenRepository;
@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,12 +21,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
+
+    @Autowired
+    public JwtAuthenticationFilter(JWTService jwtService, UserDetailsService userDetailsService, TokenRepository tokenRepository) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.tokenRepository = tokenRepository;
+    }
 
     @Override
     protected void doFilterInternal(
