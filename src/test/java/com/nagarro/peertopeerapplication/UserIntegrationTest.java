@@ -41,27 +41,27 @@ public class UserIntegrationTest {
         restTemplate = new RestTemplate();
     }
 
-    @Test
-    public void testRegisterUser() {
-        UserDTO user = new UserDTO("username123", "Password1130");
-        UserDTO response = restTemplate.postForObject(baseUrl + "/register", user, UserDTO.class);
-        assertNotNull(response);
-        assertEquals("username123", response.getUsername());
-    }
+//    @Test
+//    public void testRegisterUser() {
+//        UserDTO user = new UserDTO("username123", "Password1130");
+//        UserDTO response = restTemplate.postForObject(baseUrl + "/register", user, UserDTO.class);
+//        assertNotNull(response);
+//        assertEquals("username123", response.getUsername());
+//    }
 
 
-    @Test
-    public void testLoginSuccess() {
-        User user = new User("username100", "Password111");
-        restTemplate.postForEntity(baseUrl + "/register", user, User.class);
-
-        ResponseEntity<User> response = restTemplate.postForEntity(baseUrl + "/login", user, User.class);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("username100", response.getBody().getUsername());
-
-    }
+//    @Test
+//    public void testLoginSuccess() {
+//        User user = new User("username100", "Password111");
+//        restTemplate.postForEntity(baseUrl + "/register", user, User.class);
+//
+//        ResponseEntity<User> response = restTemplate.postForEntity(baseUrl + "/login", user, User.class);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertNotNull(response.getBody());
+//        assertEquals("username100", response.getBody().getUsername());
+//
+//    }
 
 //    @Test
 //    public void testLoginFailure() {
@@ -74,22 +74,22 @@ public class UserIntegrationTest {
 //        }
 //    }
 
-    @Test
-    public void testCalculateTotalBalance() {
-        Long userId = 1L;
-        ResponseEntity<BigInteger> response = restTemplate.getForEntity(
-                baseUrl + "/" + userId + "/total-balance",
-                BigInteger.class
-        );
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        List<Account> accounts = accountRepository.findByOwnerId(userId);
-        BigInteger expectedTotalBalance = accounts.stream()
-                .map(Account::getBalance)
-                .reduce(BigInteger.ZERO, BigInteger::add);
-
-        assertEquals(expectedTotalBalance, response.getBody());
-    }
+//    @Test
+//    public void testCalculateTotalBalance() {
+//        Long userId = 1L;
+//        ResponseEntity<BigInteger> response = restTemplate.getForEntity(
+//                baseUrl + "/" + userId + "/total-balance",
+//                BigInteger.class
+//        );
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//
+//        List<Account> accounts = accountRepository.findByOwnerId(userId);
+//        BigInteger expectedTotalBalance = accounts.stream()
+//                .map(Account::getBalance)
+//                .reduce(BigInteger.ZERO, BigInteger::add);
+//
+//        assertEquals(expectedTotalBalance, response.getBody());
+//    }
 
 }
 

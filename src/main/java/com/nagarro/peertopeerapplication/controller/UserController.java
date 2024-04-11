@@ -17,6 +17,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -27,9 +28,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
-
 @RestController
 @RequestMapping("/api/v1/users")
+@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     private final UserService userService;
@@ -44,7 +45,6 @@ public class UserController {
     }
 
 
-
     @Operation(summary = "Register User", description = "Registers a new user with the provided username and password.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User registered successfully",
@@ -53,6 +53,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('user:create')")
     public UserDTO registerUser(@RequestBody UserDTO user) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -70,12 +71,14 @@ public class UserController {
     })
 
     @PostMapping("/login")
+    @PreAuthorize("hasAuthority('user:create')")
     public ResponseEntity<UserDTO> logIn(@RequestBody UserDTO user) {
         UserDTO loggedInUser = userService.logIn(user.getUsername(), user.getPassword());
         return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/total-balance")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<BigInteger> getTotalBalance(@PathVariable Long userId) {
         BigInteger totalBalance = userService.calculateTotalBalance(userId);
         return new ResponseEntity<>(totalBalance, HttpStatus.OK);
@@ -90,6 +93,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('user:read')")
     public EntityModel<User> getSpecificUser(@PathVariable Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return userModelAssembler.toModel(user);

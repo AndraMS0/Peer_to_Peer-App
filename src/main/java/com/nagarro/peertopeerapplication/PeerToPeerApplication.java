@@ -25,17 +25,19 @@ public class PeerToPeerApplication {
         return args -> {
             var admin = RegisterRequest.builder()
                     .username("Admin")
+                    .email("admin@mail.com")
                     .password("passwordAdmin1")
                     .role(ADMIN)
                     .build();
             System.out.println("Admin token: " + service.register(admin).getAccessToken());
 
-            var user = RegisterRequest.builder()
-                    .username("User")
-                    .password("PasswordUser1")
-                    .role(USER)
-                    .build();
-            System.out.println("Manager token: " + service.register(user).getAccessToken());
+//            var user = RegisterRequest.builder()
+//                    .username("User")
+//                    .email("User@mail.com")
+//                    .password("PasswordUser1")
+//                    .role(USER)
+//                    .build();
+//            System.out.println("Manager token: " + service.register(user).getAccessToken());
 
         };
     }

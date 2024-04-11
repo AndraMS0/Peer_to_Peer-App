@@ -1,6 +1,7 @@
 package com.nagarro.peertopeerapplication.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nagarro.peertopeerapplication.configuration.JWTService;
 import com.nagarro.peertopeerapplication.enums.TokenType;
 import com.nagarro.peertopeerapplication.model.Token;
 import com.nagarro.peertopeerapplication.model.User;
@@ -17,9 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
-
 
 
 @Service
@@ -27,7 +26,7 @@ import java.io.IOException;
 public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
-    private final  JWTService jwtService;
+    private final JWTService jwtService;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -40,8 +39,8 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-        var jwtToken = jwtService.generateToken(user);
         var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
 
@@ -50,6 +49,7 @@ public class AuthenticationService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -62,29 +62,22 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-
-        String jwtToken = null;
-        String refreshToken = null;
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-            var user = userRepository.findByEmail(request.getEmail())
-                    .orElseThrow();
-             jwtToken = jwtService.generateToken(user);
-             refreshToken = jwtService.generateRefreshToken(user);
-            revokeAllUserTokens(user);
-            saveUserToken(user, jwtToken);
-            return AuthenticationResponse.builder()
-                    .accessToken(jwtToken)
-                    .refreshToken(refreshToken)
-                    .build();
-        } catch (Exception e) {
-            throw e;
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
 
     }
 
@@ -106,7 +99,7 @@ public class AuthenticationService {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);

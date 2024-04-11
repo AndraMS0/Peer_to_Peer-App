@@ -1,9 +1,6 @@
-package com.nagarro.peertopeerapplication.controller;
+package com.nagarro.peertopeerapplication.auth;
 
-import com.nagarro.peertopeerapplication.auth.AuthenticationRequest;
-import com.nagarro.peertopeerapplication.auth.AuthenticationResponse;
-import com.nagarro.peertopeerapplication.auth.AuthenticationService;
-import com.nagarro.peertopeerapplication.auth.RegisterRequest;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
