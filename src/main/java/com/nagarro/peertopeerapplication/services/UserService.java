@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -60,14 +61,16 @@ public class UserService {
     public List<Transaction> getTransactionsByUserId(Long userId) {
         return transactionRepository.findByUser_Id(userId);
     }
-
-    public BigInteger calculateTotalBalance(Long userId) {
-        List<Account> accounts = accountRepository.findByOwnerId(userId);
-        BigInteger totalBalance = BigInteger.ZERO;
-        for (Account account : accounts) {
-            totalBalance = totalBalance.add(account.getBalance());
+    public boolean changePassword(Long userId, String newPassword){
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setPassword(newPassword);
+            userRepository.save(user);
+            return true;
+        }else{
+            return false;
         }
-        return totalBalance;
     }
 
 }

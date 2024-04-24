@@ -79,4 +79,13 @@ public class AccountService {
         return balance.compareTo(BigInteger.valueOf(100)) < 0 ? "Low Balance" : "Balance is sufficient";
     }
 
+    public BigInteger calculateTotalBalance(Long userId) {
+        List<Account> accounts = accountRepository.findByOwnerId(userId);
+        BigInteger totalBalance = BigInteger.ZERO;
+        for (Account account : accounts) {
+            totalBalance = totalBalance.add(account.getBalance());
+        }
+        return totalBalance;
+    }
+
 }

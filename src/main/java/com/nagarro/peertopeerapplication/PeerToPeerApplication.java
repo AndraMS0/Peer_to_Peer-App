@@ -31,13 +31,13 @@ public class PeerToPeerApplication {
                     .build();
             System.out.println("Admin token: " + service.register(admin).getAccessToken());
 
-//            var user = RegisterRequest.builder()
-//                    .username("User")
-//                    .email("User@mail.com")
-//                    .password("PasswordUser1")
-//                    .role(USER)
-//                    .build();
-//            System.out.println("Manager token: " + service.register(user).getAccessToken());
+            var user = RegisterRequest.builder()
+                    .username("User")
+                    .email("User@mail.com")
+                    .password("PasswordUser1")
+                    .role(USER)
+                    .build();
+            System.out.println("User token: " + service.register(user).getAccessToken());
 
         };
     }

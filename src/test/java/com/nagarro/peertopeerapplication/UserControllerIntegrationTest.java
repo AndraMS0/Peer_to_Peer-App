@@ -1,10 +1,7 @@
 package com.nagarro.peertopeerapplication;
 
 import com.nagarro.peertopeerapplication.dto.UserDTO;
-import com.nagarro.peertopeerapplication.model.Account;
-import com.nagarro.peertopeerapplication.model.User;
 import com.nagarro.peertopeerapplication.repositories.AccountRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpServerErrorException;
+
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserIntegrationTest {
+public class UserControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -37,17 +31,20 @@ public class UserIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat("/users");
+        baseUrl = baseUrl.concat(":").concat(port + "").concat("/api/v1/users");
         restTemplate = new RestTemplate();
     }
 
-//    @Test
-//    public void testRegisterUser() {
-//        UserDTO user = new UserDTO("username123", "Password1130");
-//        UserDTO response = restTemplate.postForObject(baseUrl + "/register", user, UserDTO.class);
-//        assertNotNull(response);
-//        assertEquals("username123", response.getUsername());
-//    }
+    @Test
+    public void testRegisterUser() {
+        UserDTO user = new UserDTO("username123", "Password1130");
+        ResponseEntity<UserDTO> response = restTemplate.postForEntity(baseUrl + "/register", user, UserDTO.class);
+        //UserDTO response = restTemplate.postForObject(baseUrl + "/register", user, UserDTO.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        UserDTO responseBody = response.getBody();
+        assertNotNull(responseBody);
+        assertEquals("username123", responseBody.getUsername());
+    }
 
 
 //    @Test
