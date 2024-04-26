@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class AdminController {
     })
     @PostMapping
     @PreAuthorize("hasAuthority('admin:create')")
-    public UserDTO createAdmin(@RequestBody UserDTO user){
+    public UserDTO createAdmin(@RequestBody UserDTO user) {
         UserDTO adminUser = adminService.createAdmin(user.getUsername(), user.getPassword());
         return adminUser;
     }

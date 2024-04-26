@@ -15,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import static com.nagarro.peertopeerapplication.enums.Permission.*;
 import static com.nagarro.peertopeerapplication.enums.Role.ADMIN;
@@ -33,7 +31,6 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
-
 
     private static final String[] WHITE_LIST_URL = {"" +
             "/h2-console/**",
@@ -76,8 +73,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-
 
 
 }

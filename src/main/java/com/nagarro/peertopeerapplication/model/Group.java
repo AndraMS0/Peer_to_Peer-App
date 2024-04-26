@@ -14,15 +14,15 @@ public abstract class Group {
     @OneToMany(mappedBy = "savingsGroup")
     protected List<User> members;
 
-    protected List<User> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    protected void addMember(User user) {
+    public void addMember(User user) {
         members.add(user);
     }
 
-    protected void removeMember(User user) {
+    public void removeMember(User user) {
         members.remove(user);
     }
 }

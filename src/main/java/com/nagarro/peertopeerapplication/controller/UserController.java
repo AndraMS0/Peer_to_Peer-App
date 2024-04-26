@@ -15,7 +15,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,9 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-//    private final UserModelAssembler userModelAssembler;
-//
-//    private final UserRepository userRepository;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -71,11 +67,11 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @PutMapping("/{userId}/password")
-    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword ){
+    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword) {
         boolean passwordChanged = userService.changePassword(userId, newPassword);
-        if(passwordChanged){
+        if (passwordChanged) {
             return ResponseEntity.ok("Password changed successfully");
-        } else{
+        } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change the password");
         }
     }

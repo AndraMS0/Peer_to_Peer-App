@@ -24,7 +24,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public synchronized AccountDTO createAccount(Long userId, String currency) {
+    public  AccountDTO createAccount(Long userId, String currency) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
         Account account = new Account();
         account.setCurrency(currency);
